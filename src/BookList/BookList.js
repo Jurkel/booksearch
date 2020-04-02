@@ -10,7 +10,9 @@ class BookList extends Component {
   }
   render() { 
     const listItem = this.props.items.map((list, index) => (
-      <BookItem title={list.items.items[index].volumeInfo.title} />
+      <BookItem 
+        title={list.items.items[index].volumeInfo.title} 
+      />
     ));
     return ( 
         <div className='bookList'>
