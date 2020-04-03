@@ -5,7 +5,8 @@ class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      currentSearch: []
+      searchResults: [],
+      loading: false
     }
   }
 
@@ -22,7 +23,7 @@ class App extends React.Component {
       .then(data => {
         console.log(data);
         this.setState({
-          currentSearch: data,
+          searchResults: data,
           error: null
         })
       })
@@ -32,11 +33,14 @@ class App extends React.Component {
         })
       })
   }
-
+  
   render() {
     return (
       <main className='App'>
-        <BookList items={this.state.currentSearch}/>
+        <BookList 
+          searchResults={this.state.currentSearch}
+          loading={this.state.loading}  
+        />
       </main>
     )
   }  

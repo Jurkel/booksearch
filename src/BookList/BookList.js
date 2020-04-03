@@ -1,27 +1,17 @@
 import React, { Component } from 'react'
-import BookItem from './BookItem/BookItem'
+import BookItem from '../BookItem/BookItem'
 
-class BookList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
+function BookList({ results, loading }) {
+  const listOfResults = results.map(book => {
+    return <BookItem key={book.id} book={book} />
+  })
 
-    }
-  }
-  render() { 
-    const listItem = this.props.items.map((list, index) => (
-      <BookItem 
-        title={list.items.items[index].volumeInfo.title} 
-      />
-    ));
     return ( 
         <div className='bookList'>
-          <ul>
-            {listItem}
-          </ul>
+          {listOfResults}
         </div>
      )
-  }
+  
 }
  
 export default BookList
