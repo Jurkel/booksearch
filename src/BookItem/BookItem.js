@@ -10,7 +10,7 @@ class BookItem extends Component {
   render() { 
     return ( 
         <li>
-          <h3>{this.props.title}</h3>
+          <h3>{this.props.volumeInfo.title}</h3>
         </li>
      );
   }

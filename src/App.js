@@ -38,7 +38,7 @@ class App extends React.Component {
     return (
       <main className='App'>
         <BookList 
-          searchResults={this.state.currentSearch}
+          searchResults={this.state.searchResults}
           loading={this.state.loading}  
         />
       </main>
