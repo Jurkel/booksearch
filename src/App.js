@@ -1,51 +1,77 @@
-import React from 'react'
-import BookList from './BookList/BookList'
+import React, { Component } from 'react';
+import AddBookmark from './AddBookmark/AddBookmark';
+import BookmarkList from './BookmarkList/BookmarkList';
+import Nav from './Nav/Nav';
+import config from './config';
+import './App.css';
 
-class App extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      searchResults: [],
-      loading: false
-    }
+const bookmarks = [];
+
+class App extends Component {
+  state = {
+    page: 'list',
+    bookmarks,
+    error: null,
+  };
+
+  changePage = (page) => {
+    this.setState({ page })
+  }
+
+  setBookmarks = bookmarks => {
+    this.setState({
+      bookmarks,
+      error: null,
+      page: 'list',
+    })
+  }
+
+  addBookmark = bookmark => {
+    this.setState({
+      bookmarks: [ ...this.state.bookmarks, bookmark ],
+    })
   }
 
   componentDidMount() {
-    const url = 'https://www.googleapis.com/books/v1/volumes?q=brandon+sanderson&key=AIzaSyA1rowpyT_Ye7N3wZngsMfSMnGv9Z-fQv8'
-    fetch(url)
+    fetch(config.API_ENDPOINT, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${config.API_KEY}`
+      }
+    })
       .then(res => {
-        if(!res.ok) {
-          throw new Error('Something went wrong, please try again')
+        if (!res.ok) {
+          throw new Error(res.status)
         }
-        return res;
+        return res.json()
       })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        this.setState({
-          searchResults: data,
-          error: null
-        })
-      })
-      .catch(err => {
-        this.setState({
-          error: err.message
-        })
-      })
+      .then(this.setBookmarks)
+      .catch(error => this.setState({ error }))
   }
-  
+
   render() {
+    const { page, bookmarks } = this.state
     return (
       <main className='App'>
-        <BookList 
-          searchResults={this.state.searchResults}
-          loading={this.state.loading}  
-        />
+        <h1>Bookmarks!</h1>
+        <Nav clickPage={this.changePage} />
+        <div className='content' aria-live='polite'>
+          {page === 'add' && (
+            <AddBookmark
+              onAddBookmark={this.addBookmark}
+              onClickCancel={() => this.changePage('list')}
+            />
+          )}
+          {page === 'list' && (
+            <BookmarkList
+              bookmarks={bookmarks}
+            />
+          )}
+        </div>
       </main>
-    )
-  }  
+    );
+  }
 }
 
-export default App
-
-// AIzaSyA1rowpyT_Ye7N3wZngsMfSMnGv9Z-fQv8
+export default App;
